@@ -1,6 +1,6 @@
 # vue-pdf-reader
 
-> A Vue.js project
+> A vue pdf reader component.
 
 ## Build Setup
 
