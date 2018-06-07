@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-    <div class="pdf-wrap">
       <pdf-preview/>
-    </div>
   </div>
 </template>
 
@@ -26,11 +24,5 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-}
-.pdf-wrap {
-  min-width: 600px;
-  border: 1px solid #999;
-  height: auto;
-  min-height: 300px;
 }
 </style>
