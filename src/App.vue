@@ -1,6 +1,7 @@
 <template>
   <div id="app">
       <pdf-preview/>
+      <embed width="100%" height="100%" name="plugin" id="plugin" src="https://blog.mozilla.org/security/files/2015/05/HTTPS-FAQ.pdf" type="application/pdf" internalinstanceid="6">
   </div>
 </template>
 

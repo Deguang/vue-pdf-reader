@@ -39,7 +39,6 @@ export default {
                 var context = canvas.getContext('2d', {alpha: false});
                 canvas.height = viewport.height;
                 // canvas.width = viewport.width;
-                debugger
                 canvas.width = container.clientWidth;
                 canvasWrapper.appendChild(canvas);
 
