@@ -16,7 +16,7 @@ DOM 结构：
 * `.textLayer` 文本图层，文字颜色 `transparent`，提供文档选中内容的能力；
 * `.annotatinLayer` 注解层，特殊标记、超链接、图片交互操作；
 
-
+三个图层结合覆盖
 
 
 
