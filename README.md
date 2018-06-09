@@ -1,6 +1,6 @@
 # vue-pdf-reader
 
-> A vue pdf reader component.
+> A vue pdf reader component, based on [pdf.js](https://github.com/mozilla/pdf.js).
 
 ## Build Setup
 
