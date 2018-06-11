@@ -76,6 +76,33 @@ export default {
 
                 });
 
+                // annotation layer start
+                page.getAnnotations({ indent: 'disaplay', }).then((annotations) => {
+                    if(annotations.length === 0) {
+                        return;
+                    }
+                    var annotationDiv = document.createElement('div');
+                    annotationDiv.className = 'annotationLayer';
+                    container.appendChild(annotationDiv);
+                    let annotationParam = {
+                        viewport: viewport.clone({ dontFlip: true}),
+                        div: annotationDiv,
+                        annotations,
+                        page,
+                        imageResourcesPath: './images/',
+                        renderInteractiveForms: true,
+                        linkService: {
+                            externalLinkTarget: null,
+                            externalLinkRel: null
+                        },
+                        // downloadManager:
+                    }
+                    pdfJsLib.AnnotationLayer.render(annotationParam)
+                });
+                // annotation layer end
+
+
+
                 var renderContext = {
                     canvasContext: context,
                     viewport: viewport
@@ -94,8 +121,7 @@ export default {
 }
 </script>
 <style>
-/* Used in 'text' tests */
-
+@import '../assets/annotation_layer_builder.css';
 .pdf-wrap {
   min-width: 600px;
   border: 1px solid #999;
@@ -124,7 +150,7 @@ export default {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  color: #999;
+  color: transparent;
 }
 
 </style>
