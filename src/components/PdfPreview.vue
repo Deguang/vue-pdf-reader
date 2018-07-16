@@ -23,7 +23,113 @@ export default {
             console.log('PDF loaded');
             var pageNumber = 1;
             var container = document.querySelector('.pdf-wrap');
-            pdf.getPage(pageNumber).then(function(page) {
+
+            Array.from({length: pdf.numPages}).map(function(item, index) {
+                t.renderPage(pdf, ++index, container)
+            })
+            // pdf.getPage(pageNumber).then(function(page) {
+            //     console.log('Page loaded');
+            //     var scale = 1.5;
+            //     var viewport = page.getViewport(scale);
+
+            //     var canvasWrapper = document.createElement('div');
+            //     canvasWrapper.style.width =  container.style.width;
+            //     canvasWrapper.style.height =  container.style.height;
+            //     canvasWrapper.classList.add('canvasWrapper');
+            //     container.insertBefore(canvasWrapper, textLayerDiv)
+
+            //     let canvas = document.createElement('canvas');
+
+            //     var context = canvas.getContext('2d', {alpha: false});
+            //     canvas.height = viewport.height;
+            //     // canvas.width = viewport.width;
+            //     canvas.width = container.clientWidth;
+            //     canvasWrapper.appendChild(canvas);
+
+            //     const textLayerDiv = document.querySelector('.textLayer');
+            //     let textContentStream = page.streamTextContent({
+            //         normalizeWhitespace: true,
+            //     });
+            //     // var renderCapability = (0, pdfJsLib.createPromiseCapability)();
+            //     page.getTextContent().then(function (textContent) {
+            //         console.log(viewport, textContent, buildSVG)
+            //         // building SVG and adding that to the DOM
+            //         // var svg = buildSVG(viewport, textContent);
+            //         // textWrap.appendChild(svg);
+
+            //         let textLayerFrag = document.createDocumentFragment();
+
+            //         var textDivs = [],
+            //             textContentItemsStr = [];
+            //         var textLayerRenderTask = pdfJsLib.renderTextLayer({
+            //             textContent: textContent,
+            //             textContentStream: textContentStream,
+            //             container: textLayerFrag,
+            //             viewport: viewport,
+            //             textDivs: textDivs,
+            //             textContentItemsStr: textContentItemsStr,
+            //             timeout: 300,
+            //             enhanceTextSelection: false,
+            //         });
+            //         textLayerRenderTask.promise.then(() => {
+            //             textLayerDiv.appendChild(textLayerFrag);
+            //         }, function (reason) {
+            //             // Cancelled or failed to render text layer; skipping errors.
+            //             console.log('error: ', reason)
+            //         });
+
+            //     });
+
+            //     // annotation layer start
+            //     page.getAnnotations({ indent: 'disaplay', }).then((annotations) => {
+            //         if(annotations.length === 0) {
+            //             return;
+            //         }
+            //         var annotationDiv = document.createElement('div');
+            //         annotationDiv.className = 'annotationLayer';
+            //         container.appendChild(annotationDiv);
+            //         let annotationParam = {
+            //             viewport: viewport.clone({ dontFlip: true}),
+            //             div: annotationDiv,
+            //             annotations,
+            //             page,
+            //             imageResourcesPath: './images/',
+            //             renderInteractiveForms: true,
+            //             linkService: {
+            //                 externalLinkTarget: null,
+            //                 externalLinkRel: null
+            //             },
+            //             // downloadManager:
+            //         }
+            //         pdfJsLib.AnnotationLayer.render(annotationParam)
+            //     });
+            //     // annotation layer end
+
+
+
+            //     var renderContext = {
+            //         canvasContext: context,
+            //         viewport: viewport
+            //     };
+            //     console.log("renderContent: ",renderContext)
+            //     console.log('page: ', page);
+            //     var renderTask = page.render(renderContext);
+            //     renderTask.then(function() {
+            //         console.log('page rendered');
+            //     })
+            // }, function(error) {
+            //     console.log('error', error);
+            // })
+        })
+    },
+    methods: {
+        /**
+         * render a page of pdf
+         * @param {file} pdf
+         * @param {number} page
+         */
+        renderPage(pdf, page, container) {
+            pdf.getPage(page).then(function(page) {
                 console.log('Page loaded');
                 var scale = 1.5;
                 var viewport = page.getViewport(scale);
@@ -116,7 +222,7 @@ export default {
             }, function(error) {
                 console.log('error', error);
             })
-        })
+        }
     }
 }
 </script>
