@@ -1,6 +1,6 @@
 <template>
     <div class="pdf-wrap">
-        <div class="textLayer"></div>
+        <!-- <div class="textLayer"></div> -->
     </div>
 </template>
 <script>
@@ -128,8 +128,12 @@ export default {
          * @param {file} pdf
          * @param {number} page
          */
-        renderPage(pdf, page, container) {
-            pdf.getPage(page).then(function(page) {
+        renderPage(pdf, pageNum, container) {
+            pdf.getPage(pageNum).then(function(page) {
+                var pageDom = document.createElement('div');
+                pageDom.className = `page-container page-${pageNum}`
+
+
                 console.log('Page loaded');
                 var scale = 1.5;
                 var viewport = page.getViewport(scale);
@@ -138,7 +142,7 @@ export default {
                 canvasWrapper.style.width =  container.style.width;
                 canvasWrapper.style.height =  container.style.height;
                 canvasWrapper.classList.add('canvasWrapper');
-                container.insertBefore(canvasWrapper, textLayerDiv)
+                pageDom.appendChild(canvasWrapper)
 
                 let canvas = document.createElement('canvas');
 
@@ -148,12 +152,13 @@ export default {
                 canvas.width = container.clientWidth;
                 canvasWrapper.appendChild(canvas);
 
-                const textLayerDiv = document.querySelector('.textLayer');
                 let textContentStream = page.streamTextContent({
                     normalizeWhitespace: true,
                 });
                 // var renderCapability = (0, pdfJsLib.createPromiseCapability)();
                 page.getTextContent().then(function (textContent) {
+                    const textLayerDiv = document.createElement('div');
+                    textLayerDiv.className = 'textLayer'
                     console.log(viewport, textContent, buildSVG)
                     // building SVG and adding that to the DOM
                     // var svg = buildSVG(viewport, textContent);
@@ -175,6 +180,7 @@ export default {
                     });
                     textLayerRenderTask.promise.then(() => {
                         textLayerDiv.appendChild(textLayerFrag);
+                        pageDom.appendChild(textLayerDiv);
                     }, function (reason) {
                         // Cancelled or failed to render text layer; skipping errors.
                         console.log('error: ', reason)
@@ -189,7 +195,7 @@ export default {
                     }
                     var annotationDiv = document.createElement('div');
                     annotationDiv.className = 'annotationLayer';
-                    container.appendChild(annotationDiv);
+                    pageDom.appendChild(annotationDiv);
                     let annotationParam = {
                         viewport: viewport.clone({ dontFlip: true}),
                         div: annotationDiv,
@@ -217,6 +223,7 @@ export default {
                 console.log('page: ', page);
                 var renderTask = page.render(renderContext);
                 renderTask.then(function() {
+                    container.appendChild(pageDom);
                     console.log('page rendered');
                 })
             }, function(error) {
@@ -234,6 +241,9 @@ export default {
   height: auto;
   min-height: 300px;
   position: relative;
+}
+.page-container {
+    position: relative;
 }
 
 .textLayer {
