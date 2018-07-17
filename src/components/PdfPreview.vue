@@ -1,6 +1,5 @@
 <template>
     <div class="pdf-wrap">
-        <!-- <div class="textLayer"></div> -->
     </div>
 </template>
 <script>
@@ -13,17 +12,29 @@ export default {
         return {
             pdfUrl: 'https://blog.mozilla.org/security/files/2015/05/HTTPS-FAQ.pdf',
             loadingTask: null,
-            canvas: null
+            canvas: null,
+            devicePixelRatio: 1,
         }
     },
     mounted() {
         const t = this;
+        // 屏幕的设备像素比
+        t.devicePixelRatio = window.devicePixelRatio || 1;
+
         this.loadingTask = pdfJsLib.getDocument(this.pdfUrl);
         this.loadingTask.promise.then(function(pdf) {
             console.log('PDF loaded');
             var pageNumber = 1;
             var container = document.querySelector('.pdf-wrap');
 
+            // var index = 0;
+            // while(index < pdf.numPages) {
+            //     Promise.resolve(function() {
+            //        return t.renderPage(pdf, index + 1, container)
+            //     }).then(function() {
+            //         index++
+            //     })
+            // }
             Array.from({length: pdf.numPages}).map(function(item, index) {
                 t.renderPage(pdf, ++index, container)
             })
@@ -44,13 +55,10 @@ export default {
                 pageNumDom.innerHTML = `<p class="page-num">-${pageNum}/${pdf.numPages}-</p>`
                 pageDom.appendChild(pageNumDom)
 
-                console.log('Page loaded');
                 var scale = 1.5;
                 var viewport = page.getViewport(scale);
 
                 var canvasWrapper = document.createElement('div');
-                // canvasWrapper.style.width =  container.style.width * 0.9;
-                // canvasWrapper.style.height =  container.style.height;
                 canvasWrapper.classList.add('canvasWrapper');
                 pageDom.appendChild(canvasWrapper)
 
@@ -58,19 +66,33 @@ export default {
                 canvas.className = 'page-body';
 
                 var context = canvas.getContext('2d', {alpha: false});
-                canvas.height = viewport.height;
-                // canvas.width = viewport.width;
-                canvas.width = container.clientWidth * 0.9;
+
+                // 浏览器在渲染canvas之前存储画布信息的像素比
+                var backingStoreRatio = context.webkitBackingStorePixelRatio ||
+                                        context.mozBackingStorePixelRatio ||
+                                        context.msBackingStorePixelRatio ||
+                                        context.oBackingStorePixelRatio ||
+                                        context.backingStorePixelRatio || 1;
+console.log('backingStoreRatio: ',backingStoreRatio)
+                // canvas的实际渲染倍率
+                var ratio = devicePixelRatio / backingStoreRatio;
+console.log('ratio:', ratio)
+console.log('viewport:', viewport)
+                canvas.height = viewport.height * ratio;
+                canvas.width = viewport.width * ratio;
+                canvas.style.width = container.clientWidth + 'px';
+                canvas.style.height = 'auto';
+
                 canvasWrapper.appendChild(canvas);
 
                 let textContentStream = page.streamTextContent({
                     normalizeWhitespace: true,
                 });
-                // var renderCapability = (0, pdfJsLib.createPromiseCapability)();
+
                 page.getTextContent().then(function (textContent) {
                     const textLayerDiv = document.createElement('div');
                     textLayerDiv.className = 'textLayer'
-                    console.log(viewport, textContent, buildSVG)
+
                     // building SVG and adding that to the DOM
                     // var svg = buildSVG(viewport, textContent);
                     // textWrap.appendChild(svg);
@@ -146,11 +168,9 @@ export default {
 </script>
 <style>
 @import '../assets/annotation_layer_builder.css';
-* {
-    box-sizing: border-box;
-}
 .pdf-wrap {
     min-width: 600px;
+    width: 100%;
     border: 1px solid #999;
     height: auto;
     min-height: 300px;
@@ -171,8 +191,6 @@ export default {
     top: 0;
     right: 0;
     bottom: 0;
-    width: 90%;
-    margin: 0 auto;
 }
 .textLayer > div {
     position: absolute;
