@@ -12,15 +12,11 @@ export default {
         return {
             pdfUrl: 'https://blog.mozilla.org/security/files/2015/05/HTTPS-FAQ.pdf',
             loadingTask: null,
-            canvas: null,
-            devicePixelRatio: 1,
+            canvas: null
         }
     },
     mounted() {
         const t = this;
-        // 屏幕的设备像素比
-        t.devicePixelRatio = window.devicePixelRatio || 1;
-
         this.loadingTask = pdfJsLib.getDocument(this.pdfUrl);
         this.loadingTask.promise.then(async function(pdf) {
             console.log('PDF loaded');
@@ -47,9 +43,6 @@ export default {
                     pageNumDom.innerHTML = `<p class="page-num">-${pageNum}/${pdf.numPages}-</p>`
                     pageDom.appendChild(pageNumDom)
 
-                    var scale = 1.5;
-                    var viewport = page.getViewport(scale);
-
                     var canvasWrapper = document.createElement('div');
                     canvasWrapper.classList.add('canvasWrapper');
                     pageDom.appendChild(canvasWrapper)
@@ -58,22 +51,15 @@ export default {
                     canvas.className = 'page-body';
 
                     var context = canvas.getContext('2d', {alpha: false});
+                    console.log(canvas.offsetWidth, page.getViewport(1).width, window.devicePixelRatio);
+                    var scale = canvas.offsetWidth / page.getViewport(1).width * (window.devicePixelRatio || 1);
+                    console.log('scale: ', scale)
+                    var viewport = page.getViewport(scale);
 
-                    // 浏览器在渲染canvas之前存储画布信息的像素比
-                    var backingStoreRatio = context.webkitBackingStorePixelRatio ||
-                                            context.mozBackingStorePixelRatio ||
-                                            context.msBackingStorePixelRatio ||
-                                            context.oBackingStorePixelRatio ||
-                                            context.backingStorePixelRatio || 1;
-    console.log('backingStoreRatio: ',backingStoreRatio)
-                    // canvas的实际渲染倍率
-                    var ratio = devicePixelRatio / backingStoreRatio;
-    console.log('ratio:', ratio)
-    console.log('viewport:', viewport)
-                    canvas.height = viewport.height * ratio;
-                    canvas.width = viewport.width * ratio;
-                    canvas.style.width = container.clientWidth + 'px';
-                    canvas.style.height = 'auto';
+                    canvas.height = viewport.height * scale;
+                    canvas.width = viewport.width * scale;
+                    // canvas.style.width = container.clientWidth + 'px';
+                    // canvas.style.height = 'auto';
 
                     canvasWrapper.appendChild(canvas);
 
