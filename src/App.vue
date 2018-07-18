@@ -6,12 +6,10 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
 import PdfPreview from './components/PdfPreview'
 export default {
   name: 'App',
   components: {
-    HelloWorld,
     PdfPreview
   }
 }
