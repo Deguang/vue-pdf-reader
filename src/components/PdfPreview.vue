@@ -62,10 +62,10 @@ export default {
                     var context = canvas.getContext('2d', {alpha: false});
                     console.log(canvasWrapper.offsetWidth, page.getViewport(1).width, window.devicePixelRatio);
                     var scale = canvasWrapper.offsetWidth / page.getViewport(1).width * (window.devicePixelRatio || 1);
-                    var scale = canvasWrapper.offsetWidth / page.getViewport(1).width;
+                    // var scale = canvasWrapper.offsetWidth / page.getViewport(1).width;
 
                     console.log('scale: ', scale)
-                    var viewport = page.getViewport(3);
+                    var viewport = page.getViewport(scale);
 
                     console.log(canvasWrapper.clientWidth + 'px')
 
