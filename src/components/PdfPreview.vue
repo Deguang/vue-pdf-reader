@@ -20,7 +20,7 @@ export default {
         this.loadingTask = pdfJsLib.getDocument(this.pdfUrl);
         this.loadingTask.promise.then(async function(pdf) {
             console.log('PDF loaded');
-            var pageNumber = 1;
+
             var container = document.querySelector('.pdf-wrap');
             for(var i = 0, len = pdf.numPages; i < len; i++) {
                 await t.renderPage(pdf, i + 1, container)
@@ -37,29 +37,43 @@ export default {
             return new Promise(function (resolve, reject) {
                 pdf.getPage(pageNum).then(function(page) {
                     var pageDom = document.createElement('div');
+                    pageDom.style.display = 'block';
+                    pageDom.style.width = '100%';
                     pageDom.className = `page-container page-${pageNum}`
                     var pageNumDom = document.createElement('p');
                     pageNumDom.className = 'page-num';
-                    pageNumDom.innerHTML = `<p class="page-num">-${pageNum}/${pdf.numPages}-</p>`
+                    pageNumDom.innerHTML = `-${pageNum}/${pdf.numPages}-`
                     pageDom.appendChild(pageNumDom)
+                    container.appendChild(pageDom);
+
 
                     var canvasWrapper = document.createElement('div');
                     canvasWrapper.classList.add('canvasWrapper');
+                    canvasWrapper.style.display = 'block';
+                    canvasWrapper.style.width = '100%';
                     pageDom.appendChild(canvasWrapper)
 
                     let canvas = document.createElement('canvas');
                     canvas.className = 'page-body';
-
-                    var context = canvas.getContext('2d', {alpha: false});
-                    console.log(canvas.offsetWidth, page.getViewport(1).width, window.devicePixelRatio);
-                    var scale = canvas.offsetWidth / page.getViewport(1).width * (window.devicePixelRatio || 1);
-                    console.log('scale: ', scale)
-                    var viewport = page.getViewport(scale);
-
-                    canvas.height = viewport.height * scale;
-                    canvas.width = viewport.width * scale;
-                    // canvas.style.width = container.clientWidth + 'px';
+                    // canvas.style.display = 'block';
+                    // canvas.style.width = '100%';
                     // canvas.style.height = 'auto';
+                    
+                    var context = canvas.getContext('2d', {alpha: false});
+                    console.log(canvasWrapper.offsetWidth, page.getViewport(1).width, window.devicePixelRatio);
+                    var scale = canvasWrapper.offsetWidth / page.getViewport(1).width * (window.devicePixelRatio || 1);
+                    var scale = canvasWrapper.offsetWidth / page.getViewport(1).width;
+
+                    console.log('scale: ', scale)
+                    var viewport = page.getViewport(3);
+
+                    console.log(canvasWrapper.clientWidth + 'px')
+
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    canvas.style.width = canvasWrapper.clientWidth + 'px';
+                    canvas.style.height = (canvasWrapper.clientWidth) * (viewport.height / viewport.width) + 'px';
+
 
                     canvasWrapper.appendChild(canvas);
 
@@ -134,7 +148,6 @@ export default {
                     console.log('page: ', page);
                     var renderTask = page.render(renderContext);
                     renderTask.then(function() {
-                        container.appendChild(pageDom);
                         console.log('page rendered');
                         resolve();
                     })
@@ -150,8 +163,8 @@ export default {
 <style>
 @import '../assets/annotation_layer_builder.css';
 .pdf-wrap {
-    min-width: 600px;
-    width: 100%;
+    display: block;
+    width: 600px;
     border: 1px solid #999;
     height: auto;
     min-height: 300px;
