@@ -8,16 +8,22 @@ import pdfWorker from 'pdfjs-dist/build/pdf.worker.js'
 import { buildSVG, pageLoaded, roundToDivide, getOutputScale, approximateFraction } from '../assets/pdf_utils.js'
 
 export default {
+    props: {
+        url: {
+            required: true,
+            type: String,
+            default: ''
+        }
+    },
     data() {
         return {
-            pdfUrl: 'https://blog.mozilla.org/security/files/2015/05/HTTPS-FAQ.pdf',
             loadingTask: null,
             canvas: null
         }
     },
     mounted() {
         const t = this;
-        this.loadingTask = pdfJsLib.getDocument(this.pdfUrl);
+        this.loadingTask = pdfJsLib.getDocument(this.url);
         this.loadingTask.promise.then(async function(pdf) {
             console.log('PDF loaded');
 
