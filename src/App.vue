@@ -14,7 +14,7 @@ export default {
   },
   data() {
     return {
-      pdfUrl: 'https://blog.mozilla.org/security/files/2015/05/HTTPS-FAQ.pdf',
+      pdfUrl: 'http://static.xinrenxinshi.com/pdfpreview/web/compressed.tracemonkey-pldi-09.pdf',
     }
   }
 }

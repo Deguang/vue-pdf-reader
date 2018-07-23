@@ -89,7 +89,8 @@ export default {
 
                     page.getTextContent().then(function (textContent) {
                         const textLayerDiv = document.createElement('div');
-                        textLayerDiv.className = 'textLayer'
+                        textLayerDiv.className = 'textLayer';
+                        textLayerDiv.style.transform = `scale(${1/scale})`
 
                         // building SVG and adding that to the DOM
                         // var svg = buildSVG(viewport, textContent);
@@ -190,6 +191,7 @@ export default {
     top: 0;
     right: 0;
     bottom: 0;
+    transform-origin: top left;
 }
 .textLayer > div {
     position: absolute;
