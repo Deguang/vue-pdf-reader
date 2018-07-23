@@ -170,7 +170,6 @@ export default {
 @import '../assets/annotation_layer_builder.css';
 .pdf-wrap {
     display: block;
-    width: 600px;
     border: 1px solid #999;
     height: auto;
     min-height: 300px;
