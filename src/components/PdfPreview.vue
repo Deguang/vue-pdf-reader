@@ -31,7 +31,9 @@ export default {
             for(var i = 0, len = pdf.numPages; i < len; i++) {
                 await t.renderPage(pdf, i + 1, container)
             }
-        })
+        }).catch(function (reason) {
+            console.error('Error: ' + reason);
+        });
     },
     methods: {
         /**
@@ -118,6 +120,8 @@ export default {
                             console.log('error: ', reason)
                         });
 
+                    }).catch(function (reason) {
+                        console.error('Error: ' + reason);
                     });
 
                     // annotation layer start
@@ -142,6 +146,8 @@ export default {
                             // downloadManager:
                         }
                         pdfJsLib.AnnotationLayer.render(annotationParam)
+                    }).catch(function (reason) {
+                        console.error('Error: ' + reason);
                     });
                     // annotation layer end
 
