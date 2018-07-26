@@ -1,13 +1,12 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue'
-import App from './App'
+import pdfPreview from './components/PdfPreview.vue';
 
-Vue.config.productionTip = false
+const VuePdfReader = {
+  install: function (vue) {
+    if(typeof window !== 'undefined' && window.Vue) {
+      Vue = window.Vue;
+    }
+    Vue.component('VuePdfReader', pdfPreview);
+  }
+}
 
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  components: { App },
-  template: '<App/>'
-})
+export default VuePdfReader
