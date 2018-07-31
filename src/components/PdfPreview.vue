@@ -1,5 +1,6 @@
 <template>
     <div class="pdf-wrap">
+        <p v-if="fileLoading">文件加载中。。。</p>
         <p v-if="error">{{error}}</p>
     </div>
 </template>
@@ -20,7 +21,8 @@ export default {
         return {
             loadingTask: null,
             canvas: null,
-            error: null
+            error: null,
+            fileLoading: true
         }
     },
     mounted() {
@@ -30,11 +32,20 @@ export default {
             console.log('PDF loaded');
 
             var container = document.querySelector('.pdf-wrap');
-            for(var i = 0, len = pdf.numPages; i < len; i++) {
-                await t.renderPage(pdf, i + 1, container)
-            }
+            // for(var i = 0, len = pdf.numPages; i < len; i++) {
+            //     await t.renderPage(pdf, i + 1, container)
+            // }
+            console.log(pdf.numPages);
+            var pages = await Promise.all(
+                Array.apply(null, Array(pdf.numPages)).map((item, index) => {
+                    console.log(item, index)
+                    return t.renderPage(pdf, index + 1, container);
+                })
+            )
+            pages.map(item => container.appendChild(item));
         }).catch(function (reason) {
             console.error('Error: ', reason);
+            t.fileLoading = false;
             t.error = "PDF load failed :(";
         });
     },
@@ -45,6 +56,7 @@ export default {
          * @param {number} page
          */
         renderPage(pdf, pageNum, container) {
+            const t = this;
             return new Promise(function (resolve, reject) {
                 pdf.getPage(pageNum).then(function(page) {
                     var pageDom = document.createElement('div');
@@ -55,8 +67,6 @@ export default {
                     pageNumDom.className = 'page-num';
                     pageNumDom.innerHTML = `-${pageNum}/${pdf.numPages}-`
                     pageDom.appendChild(pageNumDom)
-                    container.appendChild(pageDom);
-
 
                     var canvasWrapper = document.createElement('div');
                     canvasWrapper.classList.add('canvasWrapper');
@@ -71,8 +81,8 @@ export default {
                     // canvas.style.height = 'auto';
                     
                     var context = canvas.getContext('2d', {alpha: false});
-                    console.log(canvasWrapper.offsetWidth, page.getViewport(1).width, window.devicePixelRatio);
-                    var scale = canvasWrapper.offsetWidth / page.getViewport(1).width * (window.devicePixelRatio || 1);
+                    console.log(container.offsetWidth, page.getViewport(1).width, window.devicePixelRatio);
+                    var scale = container.offsetWidth / page.getViewport(1).width * (window.devicePixelRatio || 1);
                     // var scale = canvasWrapper.offsetWidth / page.getViewport(1).width;
 
                     console.log('scale: ', scale)
@@ -82,8 +92,8 @@ export default {
 
                     canvas.height = viewport.height;
                     canvas.width = viewport.width;
-                    canvas.style.width = canvasWrapper.clientWidth + 'px';
-                    canvas.style.height = (canvasWrapper.clientWidth) * (viewport.height / viewport.width) + 'px';
+                    canvas.style.width = container.clientWidth + 'px';
+                    canvas.style.height = (container.clientWidth) * (viewport.height / viewport.width) + 'px';
 
 
                     canvasWrapper.appendChild(canvas);
@@ -165,9 +175,12 @@ export default {
                     var renderTask = page.render(renderContext);
                     renderTask.then(function() {
                         console.log('page rendered');
-                        resolve();
+                        t.fileLoading = false;
+                        console.log('pageDom: ', pageDom);
+                        resolve(pageDom);
                     })
                 }, function(error) {
+                    t.fileLoading = false;
                     console.log('error', error);
                     reject(error)
                 })
