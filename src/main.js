@@ -9,4 +9,16 @@ const VuePdfReader = {
   }
 }
 
+if(!Promise.map) {
+    Promise.map = function(vals, cb) {
+        return Promise.all(
+            vals.map(function(val, index) {
+                return new PromisePromise(function(resolve) {
+                    cb(val, index, resolve);
+                })
+            })
+        )
+    }
+}
+
 export default VuePdfReader
