@@ -8,3 +8,12 @@
 # install dependencies
 npm install vue-pdf-reader
 ```
+``` javascript
+// use in vue
+import VuePdfReader from 'vue-pdf-reader';
+Vue.use(VuePdfReader);
+```
+``` css
+/* CSS */
+@import '~vue-pdf-reader/vue-pdf-reader.css';
+```
