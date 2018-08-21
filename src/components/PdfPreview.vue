@@ -98,44 +98,45 @@ export default {
 
                     canvasWrapper.appendChild(canvas);
 
-                    // let textContentStream = page.streamTextContent({
-                    //     normalizeWhitespace: true,
-                    // });
+                    let textContentStream = page.streamTextContent({
+                        normalizeWhitespace: true,
+                    });
 
-                    // page.getTextContent().then(function (textContent) {
-                    //     const textLayerDiv = document.createElement('div');
-                    //     textLayerDiv.className = 'textLayer';
-                    //     textLayerDiv.style.transform = `scale(${1/scale})`
+                    page.getTextContent().then(function (textContent) {
+                        const textLayerDiv = document.createElement('div');
+                        textLayerDiv.className = 'textLayer';
+                        textLayerDiv.style.transform = `scale(${viewport.width / (viewport.width * (window.devicePixelRatio || 1))})`;
+                        textLayerDiv.style.transformOrigin = `left top`;
 
-                    //     // building SVG and adding that to the DOM
-                    //     // var svg = buildSVG(viewport, textContent);
-                    //     // textWrap.appendChild(svg);
+                        // building SVG and adding that to the DOM
+                        // var svg = buildSVG(viewport, textContent);
+                        // textWrap.appendChild(svg);
 
-                    //     let textLayerFrag = document.createDocumentFragment();
+                        let textLayerFrag = document.createDocumentFragment();
 
-                    //     var textDivs = [],
-                    //         textContentItemsStr = [];
-                    //     var textLayerRenderTask = pdfJsLib.renderTextLayer({
-                    //         textContent: textContent,
-                    //         textContentStream: textContentStream,
-                    //         container: textLayerFrag,
-                    //         viewport: viewport,
-                    //         textDivs: textDivs,
-                    //         textContentItemsStr: textContentItemsStr,
-                    //         timeout: 300,
-                    //         enhanceTextSelection: false,
-                    //     });
-                    //     textLayerRenderTask.promise.then(() => {
-                    //         textLayerDiv.appendChild(textLayerFrag);
-                    //         pageDom.appendChild(textLayerDiv);
-                    //     }, function (reason) {
-                    //         // Cancelled or failed to render text layer; skipping errors.
-                    //         console.log('error: ', reason)
-                    //     });
+                        var textDivs = [],
+                            textContentItemsStr = [];
+                        var textLayerRenderTask = pdfJsLib.renderTextLayer({
+                            textContent: textContent,
+                            textContentStream: textContentStream,
+                            container: textLayerFrag,
+                            viewport: viewport,
+                            textDivs: textDivs,
+                            textContentItemsStr: textContentItemsStr,
+                            timeout: 300,
+                            enhanceTextSelection: false,
+                        });
+                        textLayerRenderTask.promise.then(() => {
+                            textLayerDiv.appendChild(textLayerFrag);
+                            pageDom.appendChild(textLayerDiv);
+                        }, function (reason) {
+                            // Cancelled or failed to render text layer; skipping errors.
+                            console.log('error: ', reason)
+                        });
 
-                    // }).catch(function (reason) {
-                    //     console.error('Error: ' + reason);
-                    // });
+                    }).catch(function (reason) {
+                        console.error('Error: ' + reason);
+                    });
 
                     // annotation layer start
                     page.getAnnotations({ indent: 'disaplay', }).then((annotations) => {
