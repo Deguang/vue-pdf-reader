@@ -1,6 +1,6 @@
 <template>
     <div class="pdf-wrap">
-        <p v-if="fileLoading">文件加载中。。。</p>
+        <p style="width: 100%;text-align: center;" v-if="fileLoading">文件加载中。。。</p>
         <p v-if="error">{{error}}</p>
     </div>
 </template>
@@ -79,7 +79,7 @@ export default {
                     // canvas.style.display = 'block';
                     // canvas.style.width = '100%';
                     // canvas.style.height = 'auto';
-                    
+
                     var context = canvas.getContext('2d', {alpha: false});
                     console.log(container.offsetWidth, page.getViewport(1).width, window.devicePixelRatio);
                     var scale = container.offsetWidth / page.getViewport(1).width * (window.devicePixelRatio || 1);
@@ -205,6 +205,7 @@ export default {
     position: absolute;
     bottom: 0;
     width: 100%;
+    text-align: center;
 }
 
 .textLayer {
