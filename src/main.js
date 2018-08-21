@@ -21,4 +21,9 @@ if(!Promise.map) {
     }
 }
 
+
+if (typeof window !== 'undefined' && window.Vue) {
+    window.Vue.use(VuePdfReader)
+}
+
 export default VuePdfReader
