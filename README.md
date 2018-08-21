@@ -23,8 +23,10 @@ Another way:
 This package may cause long time to build with webpack, so you can import this lib as follows
 ```html
 <head>
+...
 <link rel="stylesheet" type="text/css" href="${some_domain}/vue-pdf-reader.min.css">
 <script src="${some_domain}/vue-pdf-reader.min.js"></script>
+...
 </head>
 
 ```
