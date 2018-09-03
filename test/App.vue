@@ -1,6 +1,6 @@
 <template>
     <div class="pdf-content">
-        <vue-pdf-reader :url="url"/>
+        <vue-pdf-reader :url="url" loading-text="简历加载中"/>
     </div>
 </template>
 <script>

@@ -1,6 +1,6 @@
 <template>
     <div class="pdf-wrap">
-        <p style="width: 100%;text-align: center;" v-if="fileLoading">文件加载中。。。</p>
+        <p style="width: 100%;text-align: center;height: 500%" v-if="fileLoading">{{loadingText}}</p>
         <p v-if="error">{{error}}</p>
     </div>
 </template>
@@ -15,6 +15,10 @@ export default {
             required: true,
             type: String,
             default: ''
+        },
+        loadingText: {
+            type: String,
+            default: '文件加载中。。。'
         }
     },
     data() {
