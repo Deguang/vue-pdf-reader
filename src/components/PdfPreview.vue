@@ -1,6 +1,6 @@
 <template>
     <div class="pdf-wrap">
-        <p style="width: 100%;text-align: center;height: 500%" v-if="fileLoading">{{loadingText}}</p>
+        <p style="width: 100%;text-align: center;height: 500%" v-if="needLoadingText && fileLoading">{{loadingText}}</p>
         <p v-if="error">{{error}}</p>
     </div>
 </template>
@@ -18,7 +18,11 @@ export default {
         },
         loadingText: {
             type: String,
-            default: '文件加载中。。。'
+            default: '文件加载中...'
+        },
+        needLoadingText: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -47,6 +51,7 @@ export default {
                 })
             )
             pages.map(item => container.appendChild(item));
+            this.$emit('loaded');
         }).catch(function (reason) {
             console.error('Error: ', reason);
             t.fileLoading = false;
