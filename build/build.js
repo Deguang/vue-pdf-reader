@@ -8,11 +8,14 @@ const rm = require('rimraf')
 const path = require('path')
 const chalk = require('chalk')
 const webpack = require('webpack')
+var cProcess = require('child_process')
 const config = require('../config')
 const webpackConfig = require('./webpack.prod.conf')
 
 const spinner = ora('building for production...')
 spinner.start()
+
+// cProcess.exec('cp -r ../node_modules/pdfjs-dist/cmaps ./dist/cmaps')
 
 rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
   if (err) throw err

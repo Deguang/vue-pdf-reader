@@ -6,8 +6,11 @@
 </template>
 <script>
 import pdfJsLib from 'pdfjs-dist/build/pdf'
-import pdfWorker from 'pdfjs-dist/build/pdf.worker.js'
+var pdfWorker = require('pdfjs-dist/build/pdf.worker.entry.js')
+// import cmaps from 'pdfjs-dist/cmaps/*'
 import { buildSVG, pageLoaded, roundToDivide, getOutputScale, approximateFraction } from '../assets/pdf_utils.js'
+
+pdfJsLib.workerSrc = pdfWorker
 
 export default {
     props: {
@@ -35,8 +38,13 @@ export default {
     },
     mounted() {
         const t = this;
-        this.loadingTask = pdfJsLib.getDocument(this.url);
+        this.loadingTask = pdfJsLib.getDocument({
+          url: this.url,
+          cMapUrl: '//static.xinrenxinshi.com/pdfpreview/web/cmaps/',
+          cMapPacked: true
+        });
         this.loadingTask.promise.then(async function(pdf) {
+            console.time('PDF_Render')
             console.log('PDF loaded');
 
             var container = document.querySelector('.pdf-wrap');
@@ -51,8 +59,10 @@ export default {
                 })
             )
             pages.map(item => container.appendChild(item));
-            this.$emit('loaded');
+            t.$emit('loaded');
+          console.timeEnd('PDF_Render')
         }).catch(function (reason) {
+            t.$emit('loaded');
             console.error('Error: ', reason);
             t.fileLoading = false;
             t.error = "PDF load failed :(";
