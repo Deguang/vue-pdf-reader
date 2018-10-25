@@ -21,7 +21,7 @@ export default {
         },
         loadingText: {
             type: String,
-            default: '文件加载中...'
+            default: 'File loading...'
         },
         needLoadingText: {
             type: Boolean,

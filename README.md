@@ -30,3 +30,11 @@ This package may cause long time to build with webpack, so you can import this l
 </head>
 
 ```
+
+
+## Props:
+|propName|isRequired|defaultValue|remark|
+|-|-|-|-|
+|url|true|empty|The Uri for pdf file.|
+|laoding-text|false|'File loading...'|The remind text for loading.|
+|||||
