@@ -37,38 +37,44 @@ export default {
         }
     },
     mounted() {
-        const t = this;
-        this.loadingTask = pdfJsLib.getDocument({
-          url: this.url,
-          cMapUrl: '//static.xinrenxinshi.com/pdfpreview/web/cmaps/',
-          cMapPacked: true
-        });
-        this.loadingTask.promise.then(async function(pdf) {
-            console.time('PDF_Render')
-            console.log('PDF loaded');
-
-            var container = document.querySelector('.pdf-wrap');
-            // for(var i = 0, len = pdf.numPages; i < len; i++) {
-            //     await t.renderPage(pdf, i + 1, container)
-            // }
-            console.log(pdf.numPages);
-            var pages = await Promise.all(
-                Array.apply(null, Array(pdf.numPages)).map((item, index) => {
-                    console.log(item, index)
-                    return t.renderPage(pdf, index + 1, container);
-                })
-            )
-            pages.map(item => container.appendChild(item));
-            t.$emit('loaded');
-          console.timeEnd('PDF_Render')
-        }).catch(function (reason) {
-            t.$emit('loaded');
-            console.error('Error: ', reason);
-            t.fileLoading = false;
-            t.error = "PDF load failed :(";
-        });
+        this.init();
     },
     methods: {
+        /**
+         * init
+         */
+        init () {
+            const t = this;
+            this.loadingTask = pdfJsLib.getDocument({
+              url: this.url,
+              cMapUrl: '//static.xinrenxinshi.com/pdfpreview/web/cmaps/',
+              cMapPacked: true
+            });
+            this.loadingTask.promise.then(async function(pdf) {
+                console.time('PDF_Render')
+                console.log('PDF loaded');
+
+                var container = document.querySelector('.pdf-wrap');
+                // for(var i = 0, len = pdf.numPages; i < len; i++) {
+                //     await t.renderPage(pdf, i + 1, container)
+                // }
+                console.log(pdf.numPages);
+                var pages = await Promise.all(
+                    Array.apply(null, Array(pdf.numPages)).map((item, index) => {
+                        console.log(item, index)
+                        return t.renderPage(pdf, index + 1, container);
+                    })
+                )
+                pages.map(item => container.appendChild(item));
+                t.$emit('loaded');
+              console.timeEnd('PDF_Render')
+            }).catch(function (reason) {
+                t.$emit('loaded');
+                console.error('Error: ', reason);
+                t.fileLoading = false;
+                t.error = "PDF load failed :(";
+            });
+        },
         /**
          * render a page of pdf
          * @param {file} pdf
@@ -206,6 +212,20 @@ export default {
                 })
             })
         }
+    },
+    watch: {
+      url: function (val, oldVal) {
+          let pa = document.querySelector('.pdf-wrap'),
+              pageList = document.querySelectorAll('.page-container');
+          Array.prototype.forEach.call(pageList, item => {
+              pa.removeChild(item);
+          })
+          this.loadingTask = null;
+          this.canvas = null;
+          this.error = null;
+          this.fileLoading = true;
+          this.init();
+      }
     }
 }
 </script>
