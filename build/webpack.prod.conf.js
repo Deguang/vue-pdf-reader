@@ -33,7 +33,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   output: {
     path: config.build.assetsRoot,
     publicPath: config.build.assetsPublicPath,
-    filename: `vue-pdf-reader-${version}.min.js`,
+    filename: `vue-pdf-reader.min.js`,
     library: 'VuePdfReader',
     libraryTarget: 'umd'
   },
@@ -54,7 +54,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     }),
     // extract css into its own file
     new ExtractTextPlugin({
-      filename: `vue-pdf-reader-${version}.min.css`,
+      filename: `vue-pdf-reader.min.css`,
       // filename: utils.assetsPath('css/[name].[contenthash].css'),
       // Setting the following option to `false` will not extract CSS from codesplit chunks.
       // Their CSS will instead be inserted dynamically with style-loader when the codesplit chunk has been loaded by webpack.
