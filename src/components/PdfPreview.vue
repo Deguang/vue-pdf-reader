@@ -148,12 +148,16 @@ export default {
                             viewport: viewport,
                             textDivs: textDivs,
                             textContentItemsStr: textContentItemsStr,
-                            timeout: 300,
+                            timeout: 100,
                             enhanceTextSelection: false,
                         });
                         textLayerRenderTask.promise.then(() => {
                             textLayerDiv.appendChild(textLayerFrag);
-                            pageDom.appendChild(textLayerDiv);
+                            if (pageDom.querySelector('.annotationLayer')) {
+                                pageDom.insertBefore(textLayerDiv, pageDom.querySelector('.annotationLayer'))
+                            } else {
+                                pageDom.appendChild(textLayerDiv);
+                            }
                         }, function (reason) {
                             // Cancelled or failed to render text layer; skipping errors.
                             console.log('error: ', reason)
@@ -250,8 +254,8 @@ export default {
 
 .textLayer {
     position: absolute;
-    left: -10px;
-    top: -10px;
+    left: 0;
+    top: 0;
     right: 0;
     bottom: 0;
     transform-origin: top left;
