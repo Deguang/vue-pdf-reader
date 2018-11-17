@@ -1,5 +1,6 @@
 <template>
     <div class="pdf-content">
+        <button @click="changeUrl">change url</button>
         <vue-pdf-reader :url="url" loading-text="简历加载中"/>
     </div>
 </template>
@@ -8,11 +9,16 @@ import VuePdfReader from '../src/components/PdfPreview.vue'
 export default {
     data() {
         return {
-            url: '../static/resume.pdf'
+            url: '../static/demo.pdf'
         }
     },
     components: {
         'vue-pdf-reader': VuePdfReader
+    },
+    methods: {
+      changeUrl () {
+        this.url = ''
+      }
     }
 }
 </script>

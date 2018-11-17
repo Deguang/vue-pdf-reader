@@ -1,8 +1,8 @@
 {
   "name": "vue-pdf-reader",
-  "version": "0.1.8",
-  "description": "A Vue.js project",
-  "author": "Deguang",
+  "version": "0.2.5",
+  "description": "A vue pdf reader component, based on pdf.js of Mozilla",
+  "author": "LiDeguang",
   "private": false,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
@@ -33,6 +33,7 @@
     "node-notifier": "^5.1.2",
     "optimize-css-assets-webpack-plugin": "^3.2.0",
     "ora": "^1.2.0",
+    "pdfjs-dist": "^2.0.943",
     "portfinder": "^1.0.13",
     "postcss-import": "^11.0.0",
     "postcss-loader": "^2.0.8",

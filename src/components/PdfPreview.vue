@@ -21,7 +21,7 @@ export default {
         },
         loadingText: {
             type: String,
-            default: '文件加载中...'
+            default: 'File loading...'
         },
         needLoadingText: {
             type: Boolean,
@@ -37,38 +37,44 @@ export default {
         }
     },
     mounted() {
-        const t = this;
-        this.loadingTask = pdfJsLib.getDocument({
-          url: this.url,
-          cMapUrl: '//static.xinrenxinshi.com/pdfpreview/web/cmaps/',
-          cMapPacked: true
-        });
-        this.loadingTask.promise.then(async function(pdf) {
-            console.time('PDF_Render')
-            console.log('PDF loaded');
-
-            var container = document.querySelector('.pdf-wrap');
-            // for(var i = 0, len = pdf.numPages; i < len; i++) {
-            //     await t.renderPage(pdf, i + 1, container)
-            // }
-            console.log(pdf.numPages);
-            var pages = await Promise.all(
-                Array.apply(null, Array(pdf.numPages)).map((item, index) => {
-                    console.log(item, index)
-                    return t.renderPage(pdf, index + 1, container);
-                })
-            )
-            pages.map(item => container.appendChild(item));
-            t.$emit('loaded');
-          console.timeEnd('PDF_Render')
-        }).catch(function (reason) {
-            t.$emit('loaded');
-            console.error('Error: ', reason);
-            t.fileLoading = false;
-            t.error = "PDF load failed :(";
-        });
+        this.init();
     },
     methods: {
+        /**
+         * init
+         */
+        init () {
+            const t = this;
+            this.loadingTask = pdfJsLib.getDocument({
+              url: this.url,
+              cMapUrl: '//static.xinrenxinshi.com/pdfpreview/web/cmaps/',
+              cMapPacked: true
+            });
+            this.loadingTask.promise.then(async function(pdf) {
+                console.time('PDF_Render')
+                console.log('PDF loaded');
+
+                var container = document.querySelector('.pdf-wrap');
+                // for(var i = 0, len = pdf.numPages; i < len; i++) {
+                //     await t.renderPage(pdf, i + 1, container)
+                // }
+                console.log(pdf.numPages);
+                var pages = await Promise.all(
+                    Array.apply(null, Array(pdf.numPages)).map((item, index) => {
+                        console.log(item, index)
+                        return t.renderPage(pdf, index + 1, container);
+                    })
+                )
+                pages.map(item => container.appendChild(item));
+                t.$emit('loaded');
+              console.timeEnd('PDF_Render')
+            }).catch(function (reason) {
+                t.$emit('loaded');
+                console.error('Error: ', reason);
+                t.fileLoading = false;
+                t.error = "PDF load failed :(";
+            });
+        },
         /**
          * render a page of pdf
          * @param {file} pdf
@@ -125,7 +131,6 @@ export default {
                         const textLayerDiv = document.createElement('div');
                         textLayerDiv.className = 'textLayer';
                         textLayerDiv.style.transform = `scale(${viewport.width / (viewport.width * (window.devicePixelRatio || 1))})`;
-                        textLayerDiv.style.transformOrigin = `left top`;
 
                         // building SVG and adding that to the DOM
                         // var svg = buildSVG(viewport, textContent);
@@ -142,12 +147,16 @@ export default {
                             viewport: viewport,
                             textDivs: textDivs,
                             textContentItemsStr: textContentItemsStr,
-                            timeout: 300,
+                            timeout: 100,
                             enhanceTextSelection: false,
                         });
                         textLayerRenderTask.promise.then(() => {
                             textLayerDiv.appendChild(textLayerFrag);
-                            pageDom.appendChild(textLayerDiv);
+                            if (pageDom.querySelector('.annotationLayer')) {
+                                pageDom.insertBefore(textLayerDiv, pageDom.querySelector('.annotationLayer'))
+                            } else {
+                                pageDom.appendChild(textLayerDiv);
+                            }
                         }, function (reason) {
                             // Cancelled or failed to render text layer; skipping errors.
                             console.log('error: ', reason)
@@ -164,6 +173,7 @@ export default {
                         }
                         var annotationDiv = document.createElement('div');
                         annotationDiv.className = 'annotationLayer';
+                        annotationDiv.style.transform = `scale(${viewport.width / (viewport.width * (window.devicePixelRatio || 1))})`;
                         pageDom.appendChild(annotationDiv);
                         let annotationParam = {
                             viewport: viewport.clone({ dontFlip: true}),
@@ -206,6 +216,20 @@ export default {
                 })
             })
         }
+    },
+    watch: {
+      url: function (val, oldVal) {
+          let pa = document.querySelector('.pdf-wrap'),
+              pageList = document.querySelectorAll('.page-container');
+          Array.prototype.forEach.call(pageList, item => {
+              pa.removeChild(item);
+          })
+          this.loadingTask = null;
+          this.canvas = null;
+          this.error = null;
+          this.fileLoading = true;
+          this.init();
+      }
     }
 }
 </script>
@@ -228,10 +252,11 @@ export default {
     text-align: center;
 }
 
-.textLayer {
+.textLayer,
+.annotationLayer {
     position: absolute;
-    left: -10px;
-    top: -10px;
+    left: 0;
+    top: 0;
     right: 0;
     bottom: 0;
     transform-origin: top left;
