@@ -174,7 +174,7 @@ export default {
                         }
                         var annotationDiv = document.createElement('div');
                         annotationDiv.className = 'annotationLayer';
-                        annotationDiv.style.transform = `scale(${viewport.width / (viewport.width * (window.devicePixelRatio || 1))})`;
+                        // annotationDiv.style.transform = `scale(${viewport.width / (viewport.width * (window.devicePixelRatio || 1))})`;
                         pageDom.appendChild(annotationDiv);
                         let annotationParam = {
                             viewport: viewport.clone({ dontFlip: true}),
@@ -253,8 +253,7 @@ export default {
     text-align: center;
 }
 
-.textLayer,
-.annotationLayer {
+.textLayer {
     position: absolute;
     left: 0;
     top: 0;
