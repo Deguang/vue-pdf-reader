@@ -17,7 +17,7 @@ export default {
     },
     methods: {
       changeUrl () {
-        this.url = ''
+        this.url = '../static/demo1.pdf'
       }
     }
 }

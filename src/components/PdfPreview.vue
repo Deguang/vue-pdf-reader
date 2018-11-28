@@ -1,5 +1,5 @@
 <template>
-    <div class="pdf-wrap">
+    <div class="pdf-wrap" :class="`pdf-wrap-${timestamp}`">
         <p style="width: 100%;text-align: center;height: 500%" v-if="needLoadingText && fileLoading">{{loadingText}}</p>
         <p v-if="error">{{error}}</p>
     </div>
@@ -33,7 +33,8 @@ export default {
             loadingTask: null,
             canvas: null,
             error: null,
-            fileLoading: true
+            fileLoading: true,
+            timestamp: new Date().getTime()
         }
     },
     mounted() {
@@ -54,7 +55,7 @@ export default {
                 console.time('PDF_Render')
                 console.log('PDF loaded');
 
-                var container = document.querySelector('.pdf-wrap');
+                var container = document.querySelector(`.pdf-wrap-${t.timestamp}`);
                 // for(var i = 0, len = pdf.numPages; i < len; i++) {
                 //     await t.renderPage(pdf, i + 1, container)
                 // }
