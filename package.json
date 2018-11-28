@@ -1,6 +1,6 @@
 {
   "name": "vue-pdf-reader",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "A vue pdf reader component, based on pdf.js of Mozilla",
   "author": "LiDeguang",
   "private": false,
