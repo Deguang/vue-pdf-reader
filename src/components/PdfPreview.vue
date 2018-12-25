@@ -38,13 +38,13 @@ export default {
         }
     },
     mounted() {
-        this.init();
+        this.init(this.timestamp);
     },
     methods: {
         /**
          * init
          */
-        init () {
+        init (timestamp) {
             const t = this;
             this.loadingTask = pdfJsLib.getDocument({
               url: this.url,
@@ -55,7 +55,7 @@ export default {
                 console.time('PDF_Render')
                 console.log('PDF loaded');
 
-                var container = document.querySelector(`.pdf-wrap-${t.timestamp}`);
+                var container = document.querySelector(`.pdf-wrap`);
                 // for(var i = 0, len = pdf.numPages; i < len; i++) {
                 //     await t.renderPage(pdf, i + 1, container)
                 // }
@@ -66,9 +66,14 @@ export default {
                         return t.renderPage(pdf, index + 1, container);
                     })
                 )
-                pages.map(item => container.appendChild(item));
-                t.$emit('loaded');
-              console.timeEnd('PDF_Render')
+                var curContainer = document.querySelector(`.pdf-wrap-${timestamp}`)
+                if (curContainer) {
+                    pages.map(item => container.appendChild(item));
+                    t.$emit('loaded');
+                } else {
+                    console.log('timestamp has changed.')
+                }
+                console.timeEnd('PDF_Render')
             }).catch(function (reason) {
                 t.$emit('loaded');
                 console.error('Error: ', reason);
@@ -225,11 +230,12 @@ export default {
           Array.prototype.forEach.call(pageList, item => {
               pa.removeChild(item);
           })
+          this.timestamp = new Date().getTime()
           this.loadingTask = null;
           this.canvas = null;
           this.error = null;
           this.fileLoading = true;
-          this.init();
+          this.init(this.timestamp);
       }
     }
 }
