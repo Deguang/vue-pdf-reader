@@ -7,7 +7,7 @@
 <script>
 import pdfJsLib from 'pdfjs-dist/build/pdf'
 var pdfWorker = require('pdfjs-dist/build/pdf.worker.entry.js')
-// import cmaps from 'pdfjs-dist/cmaps/*'
+
 import { buildSVG, pageLoaded, roundToDivide, getOutputScale, approximateFraction } from '../assets/pdf_utils.js'
 
 pdfJsLib.workerSrc = pdfWorker
@@ -47,7 +47,7 @@ export default {
             const t = this;
             this.loadingTask = pdfJsLib.getDocument({
               url: this.url,
-              cMapUrl: '//static.xinrenxinshi.com/pdfpreview/web/cmaps/',
+              cMapUrl: 'pdfjs-dist/cmaps/',
               cMapPacked: true
             });
             this.loadingTask.promise.then(async function(pdf) {
