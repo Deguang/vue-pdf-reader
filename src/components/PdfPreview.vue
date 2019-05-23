@@ -47,7 +47,7 @@ export default {
             const t = this;
             this.loadingTask = pdfJsLib.getDocument({
               url: this.url,
-              cMapUrl: 'pdfjs-dist/cmaps/',
+              cMapUrl:'//static.xinrenxinshi.com/pdfpreview/cmaps/',
               cMapPacked: true
             });
             this.loadingTask.promise.then(async function(pdf) {
