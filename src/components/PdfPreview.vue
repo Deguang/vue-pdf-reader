@@ -7,7 +7,7 @@
 <script>
 import pdfJsLib from 'pdfjs-dist/build/pdf'
 var pdfWorker = require('pdfjs-dist/build/pdf.worker.entry.js')
-// import cmaps from 'pdfjs-dist/cmaps/*'
+
 import { buildSVG, pageLoaded, roundToDivide, getOutputScale, approximateFraction } from '../assets/pdf_utils.js'
 
 pdfJsLib.workerSrc = pdfWorker
