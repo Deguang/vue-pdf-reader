@@ -1,4 +1,4 @@
-import pdfPreview from './components/PdfPreview.vue';
+import pdfPreview from './components/Index.vue';
 
 const VuePdfReader = {
   install: function (vue) {

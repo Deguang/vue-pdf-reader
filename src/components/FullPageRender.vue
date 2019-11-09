@@ -1,3 +1,4 @@
+// full page mode
 <template>
     <div class="pdf-wrap" :class="`pdf-wrap-${timestamp}`">
         <p style="width: 100%;text-align: center;height: 500%" v-if="needLoadingText && fileLoading">{{loadingText}}</p>
@@ -9,6 +10,7 @@ import pdfJsLib from 'pdfjs-dist/build/pdf'
 var pdfWorker = require('pdfjs-dist/build/pdf.worker.entry.js')
 
 import { buildSVG, pageLoaded, roundToDivide, getOutputScale, approximateFraction } from '../assets/pdf_utils.js'
+
 
 pdfJsLib.workerSrc = pdfWorker
 
@@ -68,7 +70,7 @@ export default {
                 )
                 var curContainer = document.querySelector(`.pdf-wrap-${timestamp}`)
                 if (curContainer) {
-                    pages.map(item => container.appendChild(item));
+                    pages.map(item => curContainer.appendChild(item));
                     t.$emit('loaded');
                 } else {
                     console.log('timestamp has changed.')
