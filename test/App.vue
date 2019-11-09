@@ -1,6 +1,6 @@
 <template>
   <div class="demo-wrap">
-    <nav>
+    <!-- <nav>
       <li><a href="#demo1">demo1: show all pages</a></li>
       <li><a href="#demo2">demo2: show one page with pagination</a></li>
     </nav>
@@ -13,7 +13,7 @@
         mode="full-page"
         loading-text="简历加载中"
       />
-    </div>
+    </div> -->
     <div class="split-line"/>
     <h2 id="demo2">demo2: show one page with pagination</h2>
     <div class="pdf-content-2">

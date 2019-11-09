@@ -26,7 +26,8 @@ export default {
       //   this.currentPage = oldVal;
       //   return;
       // }
-      val != this.currentPage && this.$emit('pageChange', this.currentPage)
+
+      this.$emit('pageChange', this.currentPage)
     }
   },
   methods: {

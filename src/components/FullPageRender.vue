@@ -1,3 +1,4 @@
+// full page mode
 <template>
     <div class="pdf-wrap" :class="`pdf-wrap-${timestamp}`">
         <p style="width: 100%;text-align: center;height: 500%" v-if="needLoadingText && fileLoading">{{loadingText}}</p>
@@ -35,8 +36,7 @@ export default {
             canvas: null,
             error: null,
             fileLoading: true,
-            timestamp: new Date().getTime(),
-            totalPage: 0
+            timestamp: new Date().getTime()
         }
     },
     mounted() {
@@ -56,7 +56,6 @@ export default {
             this.loadingTask.promise.then(async function(pdf) {
                 console.time('PDF_Render')
                 console.log('PDF loaded');
-                t.totalPage = pdf.numPages;
 
                 var container = document.querySelector(`.pdf-wrap`);
                 // for(var i = 0, len = pdf.numPages; i < len; i++) {
@@ -224,9 +223,6 @@ export default {
                     reject(error)
                 })
             })
-        },
-        pageChange(pageNum) {
-          console.log(pageNum)
         }
     },
     watch: {
