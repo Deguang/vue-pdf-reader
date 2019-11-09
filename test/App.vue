@@ -8,10 +8,11 @@
     <h2 id="demo1">demo1: show all pages</h2>
     <div class="pdf-content">
       <button @click="changeUrl">change url</button>
-      <!-- <vue-pdf-reader
+      <vue-pdf-reader
         :url="url"
+        mode="full-page"
         loading-text="简历加载中"
-      /> -->
+      />
     </div>
     <div class="split-line"/>
     <h2 id="demo2">demo2: show one page with pagination</h2>
@@ -25,7 +26,7 @@
   </div>
 </template>
 <script>
-import VuePdfReader from '../src/components/PdfPreview.vue'
+import VuePdfReader from '../src/components/Index'
 export default {
     data() {
         return {

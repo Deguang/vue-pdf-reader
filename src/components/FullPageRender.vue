@@ -2,7 +2,6 @@
     <div class="pdf-wrap" :class="`pdf-wrap-${timestamp}`">
         <p style="width: 100%;text-align: center;height: 500%" v-if="needLoadingText && fileLoading">{{loadingText}}</p>
         <p v-if="error">{{error}}</p>
-        <pagination v-if="mode === 'single-page' && fileLoading === false" :total="totalPage"/>
     </div>
 </template>
 <script>
@@ -10,7 +9,7 @@ import pdfJsLib from 'pdfjs-dist/build/pdf'
 var pdfWorker = require('pdfjs-dist/build/pdf.worker.entry.js')
 
 import { buildSVG, pageLoaded, roundToDivide, getOutputScale, approximateFraction } from '../assets/pdf_utils.js'
-import Pagination from './Pagination.vue'
+
 
 pdfJsLib.workerSrc = pdfWorker
 
@@ -28,14 +27,6 @@ export default {
         needLoadingText: {
             type: Boolean,
             default: false
-        },
-        mode: {
-          required: true,
-          type: String,
-          default: 'full-page',
-          validator: function (value) {
-            return ['full-page', 'single-page'].indexOf(value) !== -1
-          }
         }
     },
     data() {
@@ -65,7 +56,7 @@ export default {
             this.loadingTask.promise.then(async function(pdf) {
                 console.time('PDF_Render')
                 console.log('PDF loaded');
-                t.totalPage = pdf.numberPages;
+                t.totalPage = pdf.numPages;
 
                 var container = document.querySelector(`.pdf-wrap`);
                 // for(var i = 0, len = pdf.numPages; i < len; i++) {
@@ -233,6 +224,9 @@ export default {
                     reject(error)
                 })
             })
+        },
+        pageChange(pageNum) {
+          console.log(pageNum)
         }
     },
     watch: {
@@ -249,9 +243,6 @@ export default {
           this.fileLoading = true;
           this.init(this.timestamp);
       }
-    },
-    components: {
-      pagination: Pagination
     }
 }
 </script>
