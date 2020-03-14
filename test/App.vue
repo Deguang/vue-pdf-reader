@@ -30,7 +30,7 @@ import VuePdfReader from '../src/components/Index'
 export default {
     data() {
         return {
-            url: '../static/demo.pdf'
+            url: '../static/A\ Simple\ PDF\ File\ For\ Test.pdf'
         }
     },
     components: {
