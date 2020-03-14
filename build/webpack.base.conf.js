@@ -1,5 +1,6 @@
 'use strict'
 const path = require('path')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
@@ -29,6 +30,10 @@ module.exports = {
       '@': resolve('src'),
     }
   },
+  plugins: [
+    // vue-loader
+    new VueLoaderPlugin()
+  ],
   module: {
     rules: [
       {
@@ -39,7 +44,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
+        include: [resolve('src'), resolve('test')]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
